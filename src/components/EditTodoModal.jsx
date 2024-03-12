@@ -23,14 +23,14 @@ const EditTodoModal = ({ todo, onEditConfirmed, onCancel }) => {
         <div className="mb-4">
           <input
             type="text"
-            className="bg-[#1B1A17] text-white border-2 border-[#FF8303] rounded-md w-full px-3 py-1"
+            className="bg-[#1B1A17] text-white border-2 border-[#FF8303] rounded-md w-full px-3 py-1 focus:outline-none focus:border-[#FF8303]"
             value={editedTitle}
             onChange={handleTitleChange}
           />
         </div>
         <div className="mb-4">
           <textarea
-            className="bg-[#1B1A17] text-white border-2 border-[#FF8303] rounded-md w-full px-3 py-1"
+            className="bg-[#1B1A17] text-white border-2 border-[#FF8303] rounded-md w-full px-3 py-1 focus:outline-none focus:border-[#FF8303]"
             value={editedInput}
             onChange={handleInputChange}
             rows="10"

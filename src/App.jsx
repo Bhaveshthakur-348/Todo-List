@@ -64,7 +64,7 @@ const App = () => {
   };
 
   const handleEditConfirmed = (editedTodo) => {
-    const updatedTodos = todos.map(todo =>
+    const updatedTodos = todos.map((todo) =>
       todo.id === editedTodo.id ? editedTodo : todo
     );
     setTodos(updatedTodos);
@@ -92,14 +92,14 @@ const App = () => {
           <input
             type="text"
             placeholder="Title..."
-            className="text-white border-2 border-[#FF8303] bg-[#242320] p-1 rounded-md w-80"
+            className="text-white border-2 border-[#FF8303] bg-[#242320] p-1 rounded-md w-80 focus:outline-none focus:border-[#FF8303]"
             value={title}
             onChange={handleTitleChange}
           />
           <input
             type="text"
             placeholder="Input..."
-            className="text-white border-2 border-[#FF8303] bg-[#242320] p-1 rounded-md w-80"
+            className="text-white border-2 border-[#FF8303] bg-[#242320] p-1 rounded-md w-80 focus:outline-none focus:border-[#FF8303]"
             value={input}
             onChange={handleInputChange}
           />
@@ -115,7 +115,7 @@ const App = () => {
       </div>
 
       {/* Todo List */}
-      <div className="lg:bg-[#242320] lg:border-2 border-[#FF8303] mt-4 mx-8 rounded-md h-96 flex flex-wrap justify-center items-center">
+      <div className="lg:bg-[#242320] lg:border-2 border-[#FF8303] mt-4 mx-8 rounded-md lg:h-96 sm:h-[12rem] flex flex-wrap justify-center items-center">
         {todos.length === 0 ? (
           <div className="flex flex-col items-center">
             <p className="border-2 w-8 border-[#FF8303]"></p>
@@ -129,8 +129,12 @@ const App = () => {
               className="p-3 m-2 w-56 border-2 border-[#FF8303] rounded-md text-white flex justify-between items-center relative"
             >
               <div>
-                <p className="text-lg font-semibold">{todo.title}</p>
-                <p className="text-xs">{todo.input}</p>
+                <p className="text-lg font-semibold">
+                  {todo.title.length > 10 ? todo.input.slice(0, 10) + '...' : todo.title}
+                </p>
+                <p className="text-xs">
+                  {todo.input.length > 16 ? todo.input.slice(0, 16) + '...' : todo.input}
+                </p>
               </div>
               {selectedTodoId === todo.id ? (
                 <div className="flex absolute right-2">
@@ -172,7 +176,7 @@ const App = () => {
       {/* Edit Todo Modal */}
       {showEditModal && (
         <EditTodoModal
-          todo={todos.find(todo => todo.id === selectedTodoId)}
+          todo={todos.find((todo) => todo.id === selectedTodoId)}
           onEditConfirmed={handleEditConfirmed}
           onCancel={handleCancelEdit}
         />
