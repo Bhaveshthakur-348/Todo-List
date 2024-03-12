@@ -104,14 +104,7 @@ const App = () => {
             onChange={handleInputChange}
           />
         </div>
-        <div className="flex justify-center items-center  p-1 border-2 rounded-lg w-16 border-[#FF8303]">
-          <button
-            className="font-bold text-[30px] text-[#FF8303]"
-            onClick={handleAddTodo}
-          >
-            +
-          </button>
-        </div>
+        <img src={addImage} alt="add" onClick={handleAddTodo} />
       </div>
 
       {/* Todo List */}
