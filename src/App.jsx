@@ -76,6 +76,11 @@ const App = () => {
     setSelectedTodoId(null);
   };
 
+  const handleShowIcons = (id) => {
+    setSelectedTodoId(id);
+    setShowIcons(true);
+  };
+
   return (
     <div className="bg-[#1F1E1B] w-full h-screen">
       {/* Header  */}
@@ -87,14 +92,14 @@ const App = () => {
           <input
             type="text"
             placeholder="Title..."
-            className="text-white border-2 border-[#FF8303] bg-[#242320] p-1 rounded-md w-96"
+            className="text-white border-2 border-[#FF8303] bg-[#242320] p-1 rounded-md w-80"
             value={title}
             onChange={handleTitleChange}
           />
           <input
             type="text"
             placeholder="Input..."
-            className="text-white border-2 border-[#FF8303] bg-[#242320] p-1 rounded-md w-96"
+            className="text-white border-2 border-[#FF8303] bg-[#242320] p-1 rounded-md w-80"
             value={input}
             onChange={handleInputChange}
           />
@@ -127,7 +132,7 @@ const App = () => {
                 <p className="text-lg font-semibold">{todo.title}</p>
                 <p className="text-xs">{todo.input}</p>
               </div>
-              {showIcons ? (
+              {selectedTodoId === todo.id ? (
                 <div className="flex absolute right-2">
                   <img
                     src={editImage}
@@ -147,7 +152,7 @@ const App = () => {
                 <img
                   src={infoImage}
                   alt="info"
-                  onClick={() => setShowIcons(true)}
+                  onClick={() => handleShowIcons(todo.id)}
                   className="cursor-pointer"
                 />
               )}
