@@ -1,11 +1,11 @@
-import { useState } from "react";
-import DeleteConfirmationModal from "./components/ConfirmationModal";
-import EditTodoModal from "./components/EditTodoModal"; // Importing EditTodoModal component
-import editImage from "./assets/editImage.png";
-import deleteImage from "./assets/deleteImage.png";
-import infoImage from "./assets/infoImage.png";
-import addImage from "./assets/addImage.png";
+import { useState, lazy, Suspense } from "react";
 import Header from "./components/Header";
+import InputForm from "./components/InputForm";
+import TodoList from "./components/TodoList";
+
+// Lazily import components
+const DeleteConfirmationModal = lazy(() => import("./components/ConfirmationModal"));
+const EditTodoModal = lazy(() => import("./components/EditTodoModal"));
 
 const App = () => {
   const [todos, setTodos] = useState([]);
@@ -14,7 +14,7 @@ const App = () => {
   const [showIcons, setShowIcons] = useState(false);
   const [selectedTodoId, setSelectedTodoId] = useState(null);
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
-  const [showEditModal, setShowEditModal] = useState(false); // State to control visibility of edit modal
+  const [showEditModal, setShowEditModal] = useState(false);
 
   const handleTitleChange = (e) => {
     setTitle(e.target.value);
@@ -83,97 +83,42 @@ const App = () => {
 
   return (
     <div className="bg-[#1F1E1B] w-full h-screen">
-      {/* Header  */}
       <Header />
-
-      {/* Body  */}
+      
       <div className="flex justify-center p-4 gap-1">
-        <div className="flex flex-col gap-1">
-          <input
-            type="text"
-            placeholder="Title..."
-            className="text-white border-2 border-[#FF8303] bg-[#242320] p-1 rounded-md w-80 focus:outline-none focus:border-[#FF8303]"
-            value={title}
-            onChange={handleTitleChange}
-          />
-          <input
-            type="text"
-            placeholder="Input..."
-            className="text-white border-2 border-[#FF8303] bg-[#242320] p-1 rounded-md w-80 focus:outline-none focus:border-[#FF8303]"
-            value={input}
-            onChange={handleInputChange}
-          />
-        </div>
-        <img src={addImage} alt="add" onClick={handleAddTodo} />
+        <InputForm
+          title={title}
+          input={input}
+          onTitleChange={handleTitleChange}
+          onInputChange={handleInputChange}
+          onAddTodo={handleAddTodo}
+        />
       </div>
 
-      {/* Todo List */}
-      <div className="lg:bg-[#242320] lg:border-2 border-[#FF8303] mt-4 mx-8 rounded-md lg:h-96 sm:h-[12rem] flex flex-wrap justify-center items-center">
-        {todos.length === 0 ? (
-          <div className="flex flex-col items-center">
-            <p className="border-2 w-8 border-[#FF8303]"></p>
-            <p className="text-white font-bold py-2">No Task</p>
-            <p className="border-2 w-8 border-[#FF8303]"></p>
-          </div>
-        ) : (
-          todos.map((todo) => (
-            <div
-              key={todo.id}
-              className="p-3 m-2 w-56 border-2 border-[#FF8303] rounded-md text-white flex justify-between items-center relative"
-            >
-              <div>
-                <p className="text-lg font-semibold">
-                  {todo.title.length > 10 ? todo.input.slice(0, 10) + '...' : todo.title}
-                </p>
-                <p className="text-xs">
-                  {todo.input.length > 16 ? todo.input.slice(0, 16) + '...' : todo.input}
-                </p>
-              </div>
-              {selectedTodoId === todo.id ? (
-                <div className="flex absolute right-2">
-                  <img
-                    src={editImage}
-                    alt="edit"
-                    className="mr-2 cursor-pointer"
-                    onClick={() => handleEdit(todo.id)}
-                  />
+      <TodoList
+        todos={todos}
+        selectedTodoId={selectedTodoId}
+        onDelete={handleDelete}
+        onEdit={handleEdit}
+        onShowIcons={handleShowIcons}
+      />
 
-                  <img
-                    src={deleteImage}
-                    alt="delete"
-                    onClick={() => handleDelete(todo.id)}
-                    className="cursor-pointer"
-                  />
-                </div>
-              ) : (
-                <img
-                  src={infoImage}
-                  alt="info"
-                  onClick={() => handleShowIcons(todo.id)}
-                  className="cursor-pointer"
-                />
-              )}
-            </div>
-          ))
+      <Suspense fallback={<div>Loading...</div>}>
+        {showDeleteConfirmation && (
+          <DeleteConfirmationModal
+            onDeleteConfirmed={handleDeleteConfirmed}
+            onCancel={handleCancelDelete}
+          />
         )}
-      </div>
 
-      {/* Delete Confirmation Modal */}
-      {showDeleteConfirmation && (
-        <DeleteConfirmationModal
-          onDeleteConfirmed={handleDeleteConfirmed}
-          onCancel={handleCancelDelete}
-        />
-      )}
-
-      {/* Edit Todo Modal */}
-      {showEditModal && (
-        <EditTodoModal
-          todo={todos.find((todo) => todo.id === selectedTodoId)}
-          onEditConfirmed={handleEditConfirmed}
-          onCancel={handleCancelEdit}
-        />
-      )}
+        {showEditModal && (
+          <EditTodoModal
+            todo={todos.find((todo) => todo.id === selectedTodoId)}
+            onEditConfirmed={handleEditConfirmed}
+            onCancel={handleCancelEdit}
+          />
+        )}
+      </Suspense>
     </div>
   );
 };
